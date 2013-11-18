@@ -1,6 +1,6 @@
 # Thundr Proxy
 
-An intercepting reverse proxy module for (Thundr)[http://3wks.github.io/thundr/].
+An intercepting reverse proxy module for [Thundr](http://3wks.github.io/thundr/).
 
 ## Usage
 
