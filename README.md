@@ -2,6 +2,8 @@
 
 An intercepting reverse proxy module for [Thundr](http://3wks.github.io/thundr/).
 
+[![Build Status](https://travis-ci.org/kuhnza/thundr-proxy.png)](https://travis-ci.org/kuhnza/thundr-proxy)
+
 ## Usage
 
 First add Thundr Proxy to your `module.properties`
