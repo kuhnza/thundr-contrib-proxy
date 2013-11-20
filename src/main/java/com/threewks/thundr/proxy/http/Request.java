@@ -159,12 +159,18 @@ public class Request {
 
 	@Override
 	public String toString() {
-		return "Request{" +
-				"method='" + method + '\'' +
-				", url=" + url +
-				", headers=" + headers +
-				", body=" + Arrays.toString(body) +
-				'}';
+		return toString(false);
+	}
+
+	public String toString(boolean includeBody) {
+		String s = "Request{" +
+					"method='" + method + '\'' +
+					", url=" + url +
+					", headers=" + headers;
+		if (includeBody) {
+			s += ", body=" + new String(body);
+		}
+		return s + '}';
 	}
 
 	private Request(URL url) {

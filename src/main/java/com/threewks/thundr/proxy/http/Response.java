@@ -108,10 +108,16 @@ public class Response {
 
 	@Override
 	public String toString() {
-		return "Response{" +
-				"status=" + status +
-				", headers=" + headers +
-				", body=" + Arrays.toString(body) +
-				'}';
+		return toString(false);
+	}
+
+	public String toString(boolean includeBody) {
+		String s = "Response{" +
+					"status=" + status +
+					", headers=" + headers;
+		if (includeBody) {
+			s += ", body=" + new String(body);
+		}
+		return s + '}';
 	}
 }
