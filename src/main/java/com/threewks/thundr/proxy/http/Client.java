@@ -17,96 +17,88 @@
  */
 package com.threewks.thundr.proxy.http;
 
+import com.google.api.client.http.*;
+import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.common.collect.Maps;
+import com.threewks.thundr.proxy.ThundrProxyException;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.ProtocolException;
-import java.net.URL;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Map;
 
 public class Client {
+	public static class DontThrowExceptionsOnUnsuccessfulResponseInitializer
+			implements HttpRequestInitializer, HttpUnsuccessfulResponseHandler {
+		@Override
+		public boolean handleResponse(HttpRequest request, HttpResponse response, boolean retrySupported)
+				throws IOException {
+			return false;
+		}
+
+		@Override
+		public void initialize(HttpRequest request) throws IOException {
+			request.setUnsuccessfulResponseHandler(this);
+		}
+	}
+
+	private static HttpTransport DefaultHttpTransport = new NetHttpTransport();
+	private HttpRequestFactory requestFactory;
+
+	public Client() {
+		this(DefaultHttpTransport);
+	}
+
+	public Client(HttpTransport httpTransport) {
+		this.requestFactory = httpTransport.createRequestFactory(new DontThrowExceptionsOnUnsuccessfulResponseInitializer());
+	}
+
 	public Response send(Request request) {
-		HttpURLConnection connection = null;
-
 		try {
-			// Send request
-			connection = open(request.url());
-			setMethod(connection, request.method());
-			addHeaders(connection, request.headers());
-			writeBody(connection, request.body());
-
-			// Read response
-			int status = connection.getResponseCode();
-			Map<String, String> headers = flattenHeaders(connection);
-			byte[] body = readBody(connection);
-			return new Response().status(status)
-					.headers(headers)
-					.body(body);
+			HttpRequest internalRequest = convertToGoogleHttpClientRequest(request);
+			HttpResponse internalResponse = internalRequest.execute();
+			Response response = convertToInternalHttpResponse(internalResponse);
+			return response;
 		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} finally {
-			if (connection != null) {
-				connection.disconnect();
-			}
+			throw new ThundrProxyException(e, "An unexpected error occurred while sending the request: %s", e.getMessage());
 		}
 	}
 
-	private HttpURLConnection open(String url) throws IOException {
-		return (HttpURLConnection) new URL(url).openConnection();
-	}
-
-	private void setMethod(HttpURLConnection connection, String method) throws ProtocolException {
-		connection.setRequestMethod(method);
-		if (method.equals("POST") || method.equals("PUT")) {
-			connection.setDoOutput(true);
+	private HttpRequest convertToGoogleHttpClientRequest(Request request) throws IOException {
+		String method = request.method();
+		GenericUrl url = new GenericUrl(request.url());
+		HttpRequest internalRequest;
+		if (method.equalsIgnoreCase("GET")) {
+			internalRequest = requestFactory.buildGetRequest(url);
+		} else {
+			byte[] body = (request.body() == null) ? new byte[]{} : request.body();
+			internalRequest = requestFactory.buildRequest(method, url, new ByteArrayContent(null, body));
 		}
+
+		Map<String, String> headers = request.headers();
+		HttpHeaders internalHeaders = internalRequest.getHeaders();
+		for (String name : request.headerNames()) {
+			internalHeaders.put(name, Arrays.asList(headers.get(name)));
+		}
+		return internalRequest;
 	}
 
-	private void addHeaders(HttpURLConnection connection, Map<String, String> headers) {
+	private Response convertToInternalHttpResponse(HttpResponse response) throws IOException {
+		return new Response().status(response.getStatusCode())
+				.headers(readHeaders(response.getHeaders()))
+				.body(readContent(response.getContent()));
+	}
+
+	private Map<String, String> readHeaders(HttpHeaders headers) {
+		Map<String, String> map = Maps.newHashMap();
 		for (String name : headers.keySet()) {
-			connection.setRequestProperty(name, headers.get(name));
+			map.put(name, String.valueOf(headers.get(name)));
 		}
+		return map;
 	}
 
-	private void writeBody(HttpURLConnection connection, byte[] body) throws IOException {
-		if (body == null) {
-			return;
-		}
-
-		OutputStream os = null;
-		try {
-			if (connection.getDoOutput()) {
-				os = connection.getOutputStream();
-				os.write(body);
-			}
-		} finally {
-			if (os != null) {
-				os.flush();
-				os.close();
-			}
-		}
-	}
-
-	private Map<String, String> flattenHeaders(HttpURLConnection connection) {
-		Map<String, List<String>> headers = connection.getHeaderFields();
-		Map<String, String> flattened = Maps.newHashMap();
-		for (String name : headers.keySet()) {
-			String value = StringUtils.join(headers.get(name), ",");
-			flattened.put(name, value);
-		}
-		return flattened;
-	}
-
-	private byte[] readBody(HttpURLConnection connection) throws IOException {
-		int status = connection.getResponseCode();
-		InputStream inputStream = (status >= 200 && status <= 299) ?
-				connection.getInputStream() : connection.getErrorStream();
-		return IOUtils.toByteArray(inputStream);
+	private byte[] readContent(InputStream content) throws IOException {
+		return IOUtils.toByteArray(content);
 	}
 }
