@@ -22,27 +22,15 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.common.collect.Maps;
 import com.threewks.thundr.proxy.ThundrProxyException;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 public class Client {
-	public static class DontThrowExceptionsOnUnsuccessfulResponseInitializer
-			implements HttpRequestInitializer, HttpUnsuccessfulResponseHandler {
-		@Override
-		public boolean handleResponse(HttpRequest request, HttpResponse response, boolean retrySupported)
-				throws IOException {
-			return false;
-		}
-
-		@Override
-		public void initialize(HttpRequest request) throws IOException {
-			request.setUnsuccessfulResponseHandler(this);
-		}
-	}
-
 	private static HttpTransport DefaultHttpTransport = new NetHttpTransport();
 	private HttpRequestFactory requestFactory;
 
@@ -51,15 +39,16 @@ public class Client {
 	}
 
 	public Client(HttpTransport httpTransport) {
-		this.requestFactory = httpTransport.createRequestFactory(new DontThrowExceptionsOnUnsuccessfulResponseInitializer());
+		this.requestFactory = httpTransport.createRequestFactory();
 	}
 
 	public Response send(Request request) {
 		try {
-			HttpRequest internalRequest = convertToGoogleHttpClientRequest(request);
-			HttpResponse internalResponse = internalRequest.execute();
-			Response response = convertToInternalHttpResponse(internalResponse);
-			return response;
+			HttpRequest clientRequest = convertToGoogleHttpClientRequest(request);
+			HttpResponse clientResponse = clientRequest.execute();
+			return convertToInternalHttpResponse(clientResponse);
+		} catch (HttpResponseException e) {
+			return convertToInternalHttpResponse(e);
 		} catch (IOException e) {
 			throw new ThundrProxyException(e, "An unexpected error occurred while sending the request: %s", e.getMessage());
 		}
@@ -90,10 +79,16 @@ public class Client {
 				.body(readContent(response.getContent()));
 	}
 
+	private Response convertToInternalHttpResponse(HttpResponseException e) {
+		return new Response().status(e.getStatusCode())
+				.headers(readHeaders(e.getHeaders()))
+				.body((e.getContent() == null) ? "" : e.getContent());
+	}
+
 	private Map<String, String> readHeaders(HttpHeaders headers) {
 		Map<String, String> map = Maps.newHashMap();
 		for (String name : headers.keySet()) {
-			map.put(name, String.valueOf(headers.get(name)));
+			map.put(name, StringUtils.join(headers.getHeaderStringValues(name), ","));
 		}
 		return map;
 	}

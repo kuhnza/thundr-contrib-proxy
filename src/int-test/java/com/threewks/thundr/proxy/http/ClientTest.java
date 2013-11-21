@@ -54,8 +54,9 @@ public class ClientTest {
 		});
 		httpServer.createContext("/302", new HttpHandler() {
 			public void handle(HttpExchange exchange) throws IOException {
-				exchange.sendResponseHeaders(HttpURLConnection.HTTP_MOVED_TEMP, 0);
-				exchange.getResponseHeaders().add("Location", String.format("http://%s:%s/get", TestServerHost, TestServerPort));
+			exchange.sendResponseHeaders(HttpURLConnection.HTTP_MOVED_TEMP, 0);
+			exchange.getResponseHeaders().add("Location", String.format("http://%s:%s/get", TestServerHost, TestServerPort));
+			exchange.close();
 			}
 		});
 		httpServer.start();
@@ -78,7 +79,6 @@ public class ClientTest {
 	}
 
 	@Test
-	@Ignore
 	public void shouldHandle302ResponseFromTarget() {
 		String url = String.format("http://%s:%s/302", TestServerHost, TestServerPort);
 		Response response = httpClient.send(Request.url(url));
