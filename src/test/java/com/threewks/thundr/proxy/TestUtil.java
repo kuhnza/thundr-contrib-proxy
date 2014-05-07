@@ -17,117 +17,24 @@
  */
 package com.threewks.thundr.proxy;
 
-import com.google.common.collect.Maps;
-import com.threewks.thundr.test.mock.servlet.MockHttpServletRequest;
-
-import javax.servlet.ServletInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Collections;
-import java.util.Enumeration;
 import java.util.Map;
 
-import static com.atomicleopard.expressive.Expressive.list;
+import com.threewks.thundr.test.mock.servlet.MockHttpServletRequest;
 
 public class TestUtil {
 	public static MockHttpServletRequest newMockHttpServletRequest() {
 		return new MockHttpServletRequest() {
-			private URL url;
-			private String content;
-			private Map<String, String[]> headers = Maps.newHashMap();
-
-			@Override
-			public MockHttpServletRequest url(String url) {
-				try {
-					this.url = new URL(url);
-				} catch (MalformedURLException e) {
-					throw new RuntimeException(e);
-				}
-				return this;
-			}
-
-			@Override
-			public StringBuffer getRequestURL() {
-				String url = this.url.toString();
-				int index = url.indexOf('?');
-				if (index != -1) {
-					url = url.substring(0, index);
-				}
-				return new StringBuffer(url);
-			}
-
-			@Override
-			public String getRequestURI() {
-				return url.getPath();
-			}
-
-			@Override
-			public String getPathInfo() {
-				return url.getPath();
-			}
-
-			@Override
-			public String getPathTranslated() {
-				return url.getPath();
-			}
-
-			@Override
-			public String getQueryString() {
-				return url.getQuery();
-			}
-
-			@Override
-			public MockHttpServletRequest header(String name, String value) {
-				headers.put(name, new String[] { value });
-				return this;
-			}
-
-			@Override
-			public MockHttpServletRequest header(String name, String... values) {
-				headers.put(name, values);
-				return this;
-			}
-
+			/*
+			 * There is a bug in the base class, this overrides the behaviour to fix it.
+			 * 
+			 * @see com.threewks.thundr.test.mock.servlet.MockHttpServletRequest#header(java.util.Map)
+			 */
 			@Override
 			public MockHttpServletRequest header(Map<String, String[]> headers) {
-				this.headers.putAll(headers);
+				for (Map.Entry<String, String[]> header : headers.entrySet()) {
+					header(header.getKey(), header.getValue());
+				}
 				return this;
-			}
-
-			@Override
-			public String getHeader(String name) {
-				String[] values = headers.get(name);
-				return values == null ? null : values[0];
-			}
-
-			@Override
-			public Enumeration getHeaders(String name) {
-				return Collections.enumeration(list(headers.get(name)));
-			}
-
-			@Override
-			public Enumeration getHeaderNames() {
-				return Collections.enumeration(headers.keySet());
-			}
-
-			@Override
-			public MockHttpServletRequest content(String content) {
-				this.content = content;
-				return this;
-			}
-
-			@Override
-			public ServletInputStream getInputStream() throws IOException {
-				String body = (content == null) ? "" : content;
-				final ByteArrayInputStream inputStream = new ByteArrayInputStream(body.getBytes(this.getCharacterEncoding()));
-				return new ServletInputStream() {
-					@Override
-					public int read() throws IOException {
-						return inputStream.read();
-					}
-				};
 			}
 		};
 	}

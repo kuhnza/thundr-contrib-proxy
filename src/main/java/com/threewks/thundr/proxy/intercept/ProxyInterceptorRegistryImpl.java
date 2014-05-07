@@ -18,17 +18,18 @@
 package com.threewks.thundr.proxy.intercept;
 
 
-import com.google.common.collect.Lists;
-import com.threewks.thundr.proxy.http.Request;
-import com.threewks.thundr.proxy.http.Response;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.threewks.thundr.proxy.http.Request;
+import com.threewks.thundr.proxy.http.Response;
+
 public class ProxyInterceptorRegistryImpl implements ProxyInterceptorRegistry {
-	private final List<ProxyInterceptor> interceptors = Lists.newArrayList();
+	private final List<ProxyInterceptor> interceptors = new ArrayList<ProxyInterceptor>();
 
 	@Override
 	public void register(ProxyInterceptor interceptor) {

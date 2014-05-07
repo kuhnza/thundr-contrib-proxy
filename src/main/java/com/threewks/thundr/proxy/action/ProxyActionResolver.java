@@ -17,7 +17,13 @@
  */
 package com.threewks.thundr.proxy.action;
 
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import com.threewks.thundr.action.ActionException;
 import com.threewks.thundr.action.ActionResolver;
 import com.threewks.thundr.exception.BaseException;
@@ -26,16 +32,11 @@ import com.threewks.thundr.proxy.exception.ProxyResolverException;
 import com.threewks.thundr.proxy.rule.ProxyRule;
 import com.threewks.thundr.route.RouteType;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.Map;
-
 public class ProxyActionResolver implements ActionResolver<ProxyAction> {
 	public static final String ActionName = "proxy";
 
 	private final Proxy proxy;
-	private final List<ProxyRule> rules = Lists.newArrayList();
+	private final List<ProxyRule> rules = new ArrayList<ProxyRule>();
 
 	public ProxyActionResolver(Proxy proxy) {
 		this.proxy = proxy;
@@ -51,6 +52,10 @@ public class ProxyActionResolver implements ActionResolver<ProxyAction> {
 			return new ProxyAction();
 		}
 		return null;
+	}
+
+	@Override
+	public void initialise(ProxyAction action) {
 	}
 
 	@Override

@@ -17,11 +17,11 @@
  */
 package com.threewks.thundr.proxy.intercept;
 
-import com.threewks.thundr.proxy.http.Request;
-import com.threewks.thundr.proxy.http.Response;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.threewks.thundr.proxy.http.Request;
+import com.threewks.thundr.proxy.http.Response;
 
 public interface ProxyInterceptor {
 

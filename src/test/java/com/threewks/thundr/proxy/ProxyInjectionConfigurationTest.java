@@ -17,51 +17,46 @@
  */
 package com.threewks.thundr.proxy;
 
-import com.threewks.thundr.action.Action;
-import com.threewks.thundr.action.ActionResolver;
-import com.threewks.thundr.injection.InjectionContextImpl;
-import com.threewks.thundr.injection.UpdatableInjectionContext;
-import com.threewks.thundr.proxy.action.ProxyActionResolver;
-import com.threewks.thundr.route.Routes;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import com.threewks.thundr.action.ActionResolver;
+import com.threewks.thundr.injection.InjectionContextImpl;
+import com.threewks.thundr.injection.UpdatableInjectionContext;
+import com.threewks.thundr.proxy.action.ProxyAction;
+import com.threewks.thundr.proxy.action.ProxyActionResolver;
+import com.threewks.thundr.route.Routes;
 
 public class ProxyInjectionConfigurationTest {
 
-	private ProxyInjectionConfiguration injectionConfiguration;
-	private UpdatableInjectionContext injectionContext;
-	private Routes routes;
+	private ProxyModule injectionConfiguration = new ProxyModule();
+	private UpdatableInjectionContext injectionContext = new InjectionContextImpl();
+	private Routes routes = new Routes();
 
 	@Before
 	public void before() {
-		routes = mock(Routes.class);
-
-		injectionContext = new InjectionContextImpl();
 		injectionContext.inject(routes).as(Routes.class);
-
-		injectionConfiguration = new ProxyInjectionConfiguration();
-		injectionConfiguration.configure(injectionContext);
 	}
 
 	@Test
 	public void shouldInjectReverseProxyActionResolver() {
+		injectionConfiguration.configure(injectionContext);
+
 		ProxyActionResolver resolver = injectionContext.get(ProxyActionResolver.class);
 		assertThat(resolver, is(notNullValue()));
 	}
 
 	@Test
 	public void shouldAddActionResolverToRoutes() {
-		ArgumentCaptor<ActionResolver<Action>> resolverCaptor = (ArgumentCaptor<ActionResolver<Action>>) (Object) ArgumentCaptor.forClass(ActionResolver.class);
-		verify(routes, times(1)).addActionResolver(any(Class.class), resolverCaptor.capture());
+		injectionConfiguration.configure(injectionContext);
+		injectionConfiguration.configure(injectionContext);
 
-		ActionResolver resolver = injectionContext.get(ProxyActionResolver.class);
-		assertThat(resolverCaptor.getValue(), is(resolver));
+		ProxyActionResolver resolver = injectionContext.get(ProxyActionResolver.class);
+		ActionResolver<ProxyAction> resolverInterface = resolver;
+		assertThat(routes.getActionResolver(ProxyAction.class), is(resolverInterface));
 	}
 }

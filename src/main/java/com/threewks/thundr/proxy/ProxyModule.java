@@ -17,14 +17,23 @@
  */
 package com.threewks.thundr.proxy;
 
-
-import com.threewks.thundr.injection.InjectionConfiguration;
+import com.threewks.thundr.injection.InjectionContext;
+import com.threewks.thundr.injection.Module;
 import com.threewks.thundr.injection.UpdatableInjectionContext;
+import com.threewks.thundr.module.DependencyRegistry;
 import com.threewks.thundr.proxy.action.ProxyAction;
 import com.threewks.thundr.proxy.action.ProxyActionResolver;
 import com.threewks.thundr.route.Routes;
 
-public class ProxyInjectionConfiguration implements InjectionConfiguration {
+public class ProxyModule implements Module {
+	@Override
+	public void requires(DependencyRegistry dependencyRegistry) {
+	}
+
+	@Override
+	public void initialise(UpdatableInjectionContext injectionContext) {
+	}
+
 	@Override
 	public void configure(UpdatableInjectionContext injectionContext) {
 		ProxyActionResolver resolver = new ProxyActionResolver(new ProxyImpl());
@@ -32,5 +41,13 @@ public class ProxyInjectionConfiguration implements InjectionConfiguration {
 
 		Routes routes = injectionContext.get(Routes.class);
 		routes.addActionResolver(ProxyAction.class, resolver);
+	}
+
+	@Override
+	public void start(UpdatableInjectionContext injectionContext) {
+	}
+
+	@Override
+	public void stop(InjectionContext injectionContext) {
 	}
 }

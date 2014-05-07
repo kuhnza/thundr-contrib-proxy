@@ -19,9 +19,9 @@ package com.threewks.thundr.proxy;
 
 import com.threewks.thundr.exception.BaseException;
 
-import java.io.IOException;
-
 public class ThundrProxyException extends BaseException {
+	private static final long serialVersionUID = 1L;
+
 	public ThundrProxyException(Throwable cause, String format, Object... formatArgs) {
 		super(cause, format, formatArgs);
 	}

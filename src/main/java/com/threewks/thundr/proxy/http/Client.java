@@ -17,18 +17,25 @@
  */
 package com.threewks.thundr.proxy.http;
 
-import com.google.api.client.http.*;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.common.collect.Maps;
-import com.threewks.thundr.proxy.ThundrProxyException;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+
+import com.google.api.client.http.ByteArrayContent;
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpHeaders;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestFactory;
+import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.threewks.thundr.proxy.ThundrProxyException;
+import com.threewks.thundr.util.Streams;
 
 public class Client {
 	private static HttpTransport DefaultHttpTransport = new NetHttpTransport();
@@ -86,7 +93,7 @@ public class Client {
 	}
 
 	private Map<String, String> readHeaders(HttpHeaders headers) {
-		Map<String, String> map = Maps.newHashMap();
+		Map<String, String> map = new HashMap<String, String>();
 		for (String name : headers.keySet()) {
 			map.put(name, StringUtils.join(headers.getHeaderStringValues(name), ","));
 		}
@@ -94,6 +101,6 @@ public class Client {
 	}
 
 	private byte[] readContent(InputStream content) throws IOException {
-		return IOUtils.toByteArray(content);
+		return Streams.readBytes(content);
 	}
 }
