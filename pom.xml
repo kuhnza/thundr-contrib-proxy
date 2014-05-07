@@ -9,7 +9,7 @@
 
 	<artifactId>thundr-proxy</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.5-SNAPSHOT</version>
+	<version>0.1.0-SNAPSHOT</version>
 
 	<name>thundr-proxy</name>
 	<url>http://github.com/kuhnza/thundr-proxy/</url>
