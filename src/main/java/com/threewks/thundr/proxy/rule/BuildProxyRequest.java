@@ -18,23 +18,22 @@
 package com.threewks.thundr.proxy.rule;
 
 
-import com.google.common.collect.Maps;
-import com.threewks.thundr.logger.Logger;
-import com.threewks.thundr.proxy.http.Request;
-
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.atomicleopard.expressive.Expressive;
+import com.threewks.thundr.logger.Logger;
+import com.threewks.thundr.proxy.http.Request;
+
 public class BuildProxyRequest {
-	public static final List<String> IgnoredRequestHeaders = new ArrayList<String>(){{
-		add("host");
-		add("x-forwarded-for");
-		add("x-forwarded-port");
-		add("x-forwarded-proto");
-		add("x-forwarded-host");
-		add("x-forwarded-server");
-	}};
+	public static final List<String> IgnoredRequestHeaders = Expressive.list(
+		"host",
+		"x-forwarded-for",
+		"x-forwarded-port",
+		"x-forwarded-proto",
+		"x-forwarded-host",
+		"x-forwarded-server");
 
 	public Request from(ProxyRule rule, Request request) {
 		String url = rule.transform(request.url());
@@ -51,7 +50,7 @@ public class BuildProxyRequest {
 	}
 
 	private Map<String, String> filterHeaders(Map<String, String> headers) {
-		Map<String, String> filtered = Maps.newHashMap();
+		Map<String, String> filtered = new HashMap<String, String>();
 
 		for (String name : headers.keySet()) {
 			if (IgnoredRequestHeaders.contains(name.toLowerCase())) {

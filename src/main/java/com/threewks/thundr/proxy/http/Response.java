@@ -17,25 +17,25 @@
  */
 package com.threewks.thundr.proxy.http;
 
-import com.google.common.collect.Maps;
-import com.threewks.thundr.http.service.HttpResponse;
-import org.apache.commons.lang3.StringUtils;
-
 import java.nio.charset.Charset;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
+
+import com.threewks.thundr.http.service.HttpResponse;
+
 public class Response {
 	private int status = 200;
-	private Map<String, String> headers = Maps.newHashMap();
+	private Map<String, String> headers = new HashMap<String, String>();
 	private byte[] body = null;
 
 	public static Response from(HttpResponse response) {
 		int status = response.getStatus();
 
-		Map<String, String> headers = Maps.newHashMap();
+		Map<String, String> headers = new HashMap<String, String>();
 		Map<String, List<String>> responseHeaders = response.getHeaders();
 		for (String name : responseHeaders.keySet()) {
 			if (name == null) {

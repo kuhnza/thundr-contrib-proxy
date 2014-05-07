@@ -17,10 +17,10 @@
  */
 package com.threewks.thundr.proxy;
 
-import com.threewks.thundr.proxy.rule.ProxyRule;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.threewks.thundr.proxy.rule.ProxyRule;
 
 /**
  * Created with IntelliJ IDEA.
