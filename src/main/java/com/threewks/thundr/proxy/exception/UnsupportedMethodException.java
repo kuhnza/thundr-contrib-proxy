@@ -20,6 +20,8 @@ package com.threewks.thundr.proxy.exception;
 import com.threewks.thundr.exception.BaseException;
 
 public class UnsupportedMethodException extends BaseException {
+	private static final long serialVersionUID = 1L;
+
 	public UnsupportedMethodException(Throwable cause, String format, Object... formatArgs) {
 		super(cause, format, formatArgs);
 	}

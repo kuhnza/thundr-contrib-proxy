@@ -17,6 +17,15 @@
  */
 package com.threewks.thundr.proxy;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
 import com.threewks.thundr.logger.Logger;
 import com.threewks.thundr.proxy.http.Client;
 import com.threewks.thundr.proxy.http.Request;
@@ -24,13 +33,6 @@ import com.threewks.thundr.proxy.http.Response;
 import com.threewks.thundr.proxy.intercept.ProxyInterceptorRegistry;
 import com.threewks.thundr.proxy.rule.BuildProxyRequest;
 import com.threewks.thundr.proxy.rule.ProxyRule;
-import org.apache.commons.lang3.exception.ExceptionUtils;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Map;
 
 public class ProxyImpl implements Proxy {
 	private final BuildProxyRequest buildProxyRequest = new BuildProxyRequest();

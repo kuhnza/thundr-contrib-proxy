@@ -17,31 +17,33 @@
  */
 package com.threewks.thundr.proxy.http;
 
-import com.google.common.collect.Maps;
-import jodd.util.Base64;
-import org.apache.commons.io.IOUtils;
-
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+
+import jodd.util.Base64;
+
+import com.threewks.thundr.util.Streams;
 
 public class Request {
 	private String method = "GET";
 	private URL url;
-	private Map<String, String> parameters = Maps.newHashMap();
-	private Map<String, String> headers = Maps.newHashMap();
+	private Map<String, String> parameters = new HashMap<String, String>();
+	private Map<String, String> headers = new HashMap<String, String>();
 	private byte[] body = null;
 
 	public static Request from(HttpServletRequest request) throws IOException {
 		StringBuffer url = request.getRequestURL();
 		String queryString = request.getQueryString();
-		Map<String, String> parameters = Maps.newHashMap();
+		Map<String, String> parameters = new HashMap<String, String>();
+				
 		if (queryString != null && queryString.length() > 0) {
 			url.append('?').append(queryString);
 
@@ -59,7 +61,9 @@ public class Request {
 
 		String method = request.getMethod();
 
-		Map<String, String> headers = Maps.newHashMap();
+		Map<String, String> headers = new HashMap<String, String>();
+		
+		@SuppressWarnings("rawtypes")
 		Enumeration headerNames = request.getHeaderNames();
 		while (headerNames.hasMoreElements()) {
 			String name = (String) headerNames.nextElement();
@@ -72,7 +76,7 @@ public class Request {
 		byte[] body = null;
 		InputStream inputStream = request.getInputStream();
 		if (inputStream != null) {
-			body = IOUtils.toByteArray(inputStream);
+			body = Streams.readBytes(inputStream);
 			if (body.length == 0) {
 				body = null;
 			}

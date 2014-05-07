@@ -19,7 +19,6 @@ package com.threewks.thundr.proxy;
 
 
 
-import com.google.common.collect.Maps;
 import com.threewks.thundr.proxy.http.Request;
 import com.threewks.thundr.proxy.http.Response;
 import com.threewks.thundr.proxy.intercept.ProxyInterceptor;
@@ -68,7 +67,7 @@ public class ReverseProxyImplTest {
 		String method = "GET";
 		String content = null;
 
-		Map<String, String[]> headers = Maps.newHashMap();
+		Map<String, String[]> headers = new HashMap<String, String[]>();
 		headers.put("Accept", new String[]{"application/json"});
 
 		doRequest(uri, method, headers, content);
@@ -86,7 +85,7 @@ public class ReverseProxyImplTest {
 				"    }" +
 				"}";
 
-		Map<String, String[]> headers = Maps.newHashMap();
+		Map<String, String[]> headers = new HashMap<String, String[]>();
 		headers.put("Accept", new String[]{"application/json"});
 		headers.put("Content-Type", new String[]{"application/json"});
 
@@ -99,7 +98,7 @@ public class ReverseProxyImplTest {
 		String method = "PUT";
 		String content = "{\"customer\":{\"city\":\"Sydney\"}";
 
-		Map<String, String[]> headers = Maps.newHashMap();
+		Map<String, String[]> headers = new HashMap<String, String[]>();
 		headers.put("Accept", new String[]{"application/json"});
 		headers.put("Content-Type", new String[]{"application/json"});
 
@@ -111,7 +110,7 @@ public class ReverseProxyImplTest {
 		String uri = "/customer/1234.json";
 		String method = "DELETE";
 		String content = null;
-		Map<String, String[]> headers = Maps.newHashMap();
+		Map<String, String[]> headers = new HashMap<String, String[]>();
 
 		doRequest(uri, method, headers, content);
 	}
@@ -122,7 +121,7 @@ public class ReverseProxyImplTest {
 		String method = "GET";
 		String content = null;
 
-		Map<String, String[]> headers = Maps.newHashMap();
+		Map<String, String[]> headers = new HashMap<String, String[]>();
 		headers.put("Host", new String[]{"http://localhost:8080"});
 
 		doRequest(uri, method, headers, content);
@@ -154,7 +153,7 @@ public class ReverseProxyImplTest {
 	@Test
 	public void shouldReturnAlternateResponseFromBeforeInterceptor() {
 		int status = 418;
-		Map<String, String> headers = Maps.newHashMap();
+		Map<String, String> headers = new HashMap<String, String>();
 		headers.put("Content-Type", "text/plain");
 		byte[] body = "I'm a teapot!".getBytes(Utf8);
 		Response alternateResponse = new Response()
@@ -172,7 +171,7 @@ public class ReverseProxyImplTest {
 	@Test
 	public void shouldReturnAlternateResponseFromAfterInterceptor() {
 		int status = 401;
-		Map<String, String> headers = Maps.newHashMap();
+		Map<String, String> headers = new HashMap<String, String>();
 		headers.put("Content-Type", "text/plain");
 		byte[] body = "No soup for you!".getBytes(Utf8);
 		Response alternateResponse = new Response()

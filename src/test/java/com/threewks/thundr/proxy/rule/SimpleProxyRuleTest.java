@@ -17,15 +17,16 @@
  */
 package com.threewks.thundr.proxy.rule;
 
-import com.threewks.thundr.proxy.intercept.ProxyInterceptor;
-import com.threewks.thundr.proxy.intercept.ProxyInterceptorRegistry;
-import org.junit.Before;
-import org.junit.Test;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.Mockito.mock;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import com.threewks.thundr.proxy.intercept.ProxyInterceptor;
+import com.threewks.thundr.proxy.intercept.ProxyInterceptorRegistry;
 
 public class SimpleProxyRuleTest {
 

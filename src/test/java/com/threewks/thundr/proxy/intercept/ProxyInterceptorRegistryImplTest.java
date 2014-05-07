@@ -17,22 +17,23 @@
  */
 package com.threewks.thundr.proxy.intercept;
 
-import com.threewks.thundr.proxy.http.Request;
-import com.threewks.thundr.proxy.http.Response;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import java.util.List;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import com.threewks.thundr.proxy.http.Request;
+import com.threewks.thundr.proxy.http.Response;
 
 public class ProxyInterceptorRegistryImplTest {
 	@Rule

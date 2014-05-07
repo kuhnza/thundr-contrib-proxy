@@ -20,6 +20,8 @@ package com.threewks.thundr.proxy.exception;
 import com.threewks.thundr.exception.BaseException;
 
 public class ProxyResolverException extends BaseException {
+	private static final long serialVersionUID = 1L;
+
 	public ProxyResolverException(Throwable cause, String format, Object... formatArgs) {
 		super(cause, format, formatArgs);
 	}
