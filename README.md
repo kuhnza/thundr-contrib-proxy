@@ -2,7 +2,7 @@
 
 An intercepting reverse proxy module for [Thundr](http://3wks.github.io/thundr/).
 
-[![Build Status](https://travis-ci.org/kuhnza/thundr-proxy.png)](https://travis-ci.org/kuhnza/thundr-proxy)
+[![Build Status](https://travis-ci.org/kuhnza/thundr-contrib-proxy.png)](https://travis-ci.org/kuhnza/thundr-contrib-proxy)
 
 ## Usage
 
@@ -92,8 +92,8 @@ If the SimpleProxyRule class just isn't cutting it then creating your own is eas
 implement the [ProxyRule] interface. 
 
 
-[ProxyRule]: https://github.com/kuhnza/thundr-proxy/blob/master/src/main/java/com/threewks/thundr/proxy/rule/ProxyRule.java
-[BaseProxyRule]: https://github.com/kuhnza/thundr-proxy/blob/master/src/main/java/com/threewks/thundr/proxy/rule/BaseProxyRule.java
-[SimpleProxyRule]: https://github.com/kuhnza/thundr-proxy/blob/master/src/main/java/com/threewks/thundr/proxy/rule/SimpleProxyRule.java
-[ProxyInterceptor]: https://github.com/kuhnza/thundr-proxy/blob/master/src/main/java/com/threewks/thundr/proxy/intercept/ProxyInterceptor.java
-[BaseProxyInterceptor]: https://github.com/kuhnza/thundr-proxy/blob/master/src/main/java/com/threewks/thundr/proxy/intercept/BaseProxyInterceptor.java
+[ProxyRule]: https://github.com/kuhnza/thundr-contrib-proxy/blob/master/src/main/java/com/threewks/thundr/proxy/rule/ProxyRule.java
+[BaseProxyRule]: https://github.com/kuhnza/thundr-contrib-proxy/blob/master/src/main/java/com/threewks/thundr/proxy/rule/BaseProxyRule.java
+[SimpleProxyRule]: https://github.com/kuhnza/thundr-contrib-proxy/blob/master/src/main/java/com/threewks/thundr/proxy/rule/SimpleProxyRule.java
+[ProxyInterceptor]: https://github.com/kuhnza/thundr-contrib-proxy/blob/master/src/main/java/com/threewks/thundr/proxy/intercept/ProxyInterceptor.java
+[BaseProxyInterceptor]: https://github.com/kuhnza/thundr-contrib-proxy/blob/master/src/main/java/com/threewks/thundr/proxy/intercept/BaseProxyInterceptor.java
