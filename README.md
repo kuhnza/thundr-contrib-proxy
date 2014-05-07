@@ -6,10 +6,15 @@ An intercepting reverse proxy module for [Thundr](http://3wks.github.io/thundr/)
 
 ## Usage
 
-First add Thundr Proxy to your `module.properties`
+In your `ApplicationModule`:
 
-```ini
-com.threewks.thundr.proxy=
+```java
+@Override
+public void requires(DependencyRegistry dependencyRegistry) {
+    super.requires(dependencyRegistry);
+
+    dependencyRegistry.addDependency(ProxyModule.class);
+}
 ```
 
 ### Configuring Routes
